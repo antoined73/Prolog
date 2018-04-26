@@ -37,6 +37,20 @@ creneau(1, '10:00 AM', '12:00 AM').
 creneau(2, '1:30 PM', '3:30 PM').
 creneau(3, '3:30 PM', '5:30 PM').
 
+%%%% Salle %%%%
+salle(0, 'O+110').
+salle(1, 'O+111').
+salle(2, 'O+112').
+salle(3, 'O+113').
+salle(4, 'O+114').
+salle(5, 'O+115').
+salle(6, 'E+110').
+salle(7, 'E+111').
+salle(8, 'E+112').
+salle(9, 'E+113').
+salle(10, 'E+114').
+salle(11, 'E+115').
+
 %%%%%%%%%%%%%%%%%%%
 %%%% Fonctions %%%%
 %%%%%%%%%%%%%%%%%%%
@@ -50,6 +64,12 @@ jour(X) :- jour(X, _).
 
 % Le creneau qui a pour id X est un creneau répetorié si on le trouve dans la base de données
 creneau(X):- creneau(X,_,_). 
+
+
+%%%% Salle %%%%
+
+% La salle d'id X est un salle si on la trouve dans la base de données
+salle(X):- salle(X,_).
 
 %%%% Affichage au format csv %%%%
 
