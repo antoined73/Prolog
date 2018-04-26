@@ -1,3 +1,7 @@
+%%%%%%%%%%%%%%%%%
+%%%% Données %%%%
+%%%%%%%%%%%%%%%%%
+
 %%%% Jours %%%%
 % Semaine 1 
 jour(0,'4/2/2018').
@@ -27,7 +31,27 @@ jour(17,'4/25/2018').
 jour(18,'4/26/2018').
 jour(19,'4/27/2018').
 
-jour(X) :- jour(X, _). % La journée qui a pour id X est un jour répetorié s'il l'on trouve une date associée
+%%%% Crénaux %%%%
+creneau(0, '8:00 AM', '10:00 AM').
+creneau(1, '10:00 AM', '12:00 AM').
+creneau(2, '1:30 PM', '3:30 PM').
+creneau(3, '3:30 PM', '5:30 PM').
+
+%%%%%%%%%%%%%%%%%%%
+%%%% Fonctions %%%%
+%%%%%%%%%%%%%%%%%%%
+
+%%%% Jours %%%%
+
+% La journée qui a pour id X est un jour répetorié si on le trouve dans la base de données
+jour(X) :- jour(X, _). 
+
+%%%% Crénaux %%%%
+
+% Le creneau qui a pour id X est un creneau répetorié si on le trouve dans la base de données
+creneau(X):- creneau(X,_,_). 
+
+%%%% Affichage au format csv %%%%
 
 % Ecriture au format csv de la liste des cours : printcsv(Liste_des_cours)
 printcsv([]).
