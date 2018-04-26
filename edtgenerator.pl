@@ -3,33 +3,42 @@
 %%%%%%%%%%%%%%%%%
 
 %%%% Jours %%%%
+% jour(ID_jour, date, est_un_jour_travaillé)
 % Semaine 1 
-jour(0,'4/2/2018').
-jour(1,'4/3/2018').
-jour(2,'4/4/2018').
-jour(3,'4/5/2018').
-jour(4,'4/6/2018').
+jour(0,'4/2/2018', 1).
+jour(1,'4/3/2018', 1).
+jour(2,'4/4/2018', 1).
+jour(3,'4/5/2018', 1).
+jour(4,'4/6/2018', 1).
+jour(5,'4/7/2018', 0).
+jour(6,'4/8/2018', 0).
 
 % Semaine 2
-jour(5,'4/9/2018').
-jour(6,'4/10/2018').
-jour(7,'4/11/2018').
-jour(8,'4/12/2018').
-jour(9,'4/13/2018').
+jour(7,'4/9/2018', 1).
+jour(8,'4/10/2018', 1).
+jour(9,'4/11/2018', 1).
+jour(10,'4/12/2018', 1).
+jour(11,'4/13/2018', 1).
+jour(12,'4/14/2018', 0).
+jour(13,'4/15/2018', 0).
 
 % Semaine 3 
-jour(10,'4/16/2018').
-jour(11,'4/17/2018').
-jour(12,'4/18/2018').
-jour(13,'4/19/2018').
-jour(14,'4/20/2018').
+jour(14,'4/16/2018', 1).
+jour(15,'4/17/2018', 1).
+jour(16,'4/18/2018', 1).
+jour(17,'4/19/2018', 1).
+jour(18,'4/20/2018', 1).
+jour(19,'4/21/2018', 0).
+jour(20,'4/22/2018', 0).
 
 % Semaine 4
-jour(15,'4/23/2018').
-jour(16,'4/24/2018').
-jour(17,'4/25/2018').
-jour(18,'4/26/2018').
-jour(19,'4/27/2018').
+jour(21,'4/23/2018', 1).
+jour(22,'4/24/2018', 1).
+jour(23,'4/25/2018', 1).
+jour(24,'4/26/2018', 1).
+jour(25,'4/27/2018', 1).
+jour(26,'4/28/2018', 0).
+jour(27,'4/29/2018', 0).
 
 %%%% Crénaux %%%%
 creneau(0, '8:00 AM', '10:00 AM').
@@ -51,25 +60,40 @@ salle(9, 'E+113').
 salle(10, 'E+114').
 salle(11, 'E+115').
 
+%%%% Matière %%%%
+% matiere(ID_Matiere, nom, nombre_heures_total)
+matiere(0, 'Programmation fonctionnelle', 35).
+matiere(1, 'Machine learning', 30).
+matiere(2, 'Chinois', 20).
+matiere(3, 'Anglais', 20).
+matiere(4, 'Communication', 15).
+matiere(5, 'Réseau', 35).
+
 %%%%%%%%%%%%%%%%%%%
 %%%% Fonctions %%%%
 %%%%%%%%%%%%%%%%%%%
 
 %%%% Jours %%%%
+% La journée qui a pour id X est un jour répetorié si on le trouve dans la base de données
+jour(X):- jour(X,_,_). 
 
 % La journée qui a pour id X est un jour répetorié si on le trouve dans la base de données
-jour(X) :- jour(X, _). 
+est_un_jour_travaille(X,EstTravaille):- jour(X,_,EstTravaille). 
 
 %%%% Crénaux %%%%
-
 % Le creneau qui a pour id X est un creneau répetorié si on le trouve dans la base de données
 creneau(X):- creneau(X,_,_). 
 
-
 %%%% Salle %%%%
-
 % La salle d'id X est un salle si on la trouve dans la base de données
 salle(X):- salle(X,_).
+
+%%%% Matière %%%%
+% Une matiere d'id X est une matiere si on la trouve dans la base de données
+matiere(X):- matiere(X,_,_).
+
+% Permet d'obtenir le nombre d'heures d'une matiere dans Nb_heures
+nb_heure_matiere(X,Nb_heures):- matiere(X,_,Nb_heures).
 
 %%%% Affichage au format csv %%%%
 
@@ -84,7 +108,7 @@ printcsv([[Matiere, Salle, Creneau, ID_Jour, Prof]|List]) :-
     write(Hdebut),write(','),                           %Start Time
     write(Jour),write(','),                             %End Date
     write(Hfin),write(','),                             %End Time
-    write('),                                          %Description
+    write(''),                                          %Description
     write(Salle),write(','),nl,                         %Location
     printcsv(List).
 
