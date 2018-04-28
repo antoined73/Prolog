@@ -41,10 +41,11 @@ jour(26,'4/28/2018', 0).
 jour(27,'4/29/2018', 0).
 
 %%%% Crénaux %%%%
-creneau(0, '8:00 AM', '10:00 AM').
-creneau(1, '10:00 AM', '12:00 AM').
-creneau(2, '1:30 PM', '3:30 PM').
-creneau(3, '3:30 PM', '5:30 PM').
+% creneau(ID_Creneau, horaire de début, horaire de fin, temps total)
+creneau(0, '8:00 AM', '10:00 AM', 2).
+creneau(1, '10:00 AM', '12:00 AM', 2).
+creneau(2, '1:30 PM', '3:30 PM', 2).
+creneau(3, '3:30 PM', '5:30 PM', 2).
 
 %%%% Salle %%%%
 salle(0, 'O+110').
@@ -62,31 +63,31 @@ salle(11, 'E+115').
 
 %%%% Matière %%%%
 % matiere(ID_Matiere, nom, nombre_heures_total)
-matiere(0, 'Programmation fonctionnelle', 27).
-matiere(1, 'Programmation parallele', 22).
-matiere(2, 'Chinois', 12).
-matiere(3, 'Anglais', 14).
-matiere(4, 'Communication', 10).
-matiere(5, 'Réseau', 27).
-matiere(6, 'DevOps', 28).
-matiere(7, 'ISA', 28).
-matiere(8, 'WebServices', 24).
+matiere(0, 'Programmation fonctionnelle', 12).
+matiere(1, 'Programmation parallele', 12).
+matiere(2, 'Chinois', 4).
+matiere(3, 'Anglais', 5).
+matiere(4, 'Communication', 3).
+matiere(5, 'Réseau', 12).
+matiere(6, 'DevOps', 12).
+matiere(7, 'ISA', 12).
+matiere(8, 'WebServices', 10).
 
 %%%% Professeurs %%%
 % professeur(ID_Professeur, nom, ID_Matiere, nombre_heures_enseignement)
-professeur(0, 'Collet', 6, 15).
-professeur(1, 'Tigli', 8, 25).
-professeur(2, 'Pinna', 7, 15).
-professeur(3, 'Mosser', 7, 15).
-professeur(4, 'Aygen', 3, 15).
-professeur(5, 'Tang', 2, 12).
-professeur(6, 'Buis', 4, 10).
-professeur(7, 'Lopez', 5, 22).
-professeur(8, 'Baude', 5, 10).
-professeur(9, 'Molines', 6, 15).
-professeur(10, 'Gallesio', 0, 15).
-professeur(11, 'Rueher', 0, 15).
-professeur(8, 'Huet', 1, 25).
+professeur(0, 'Collet', 6, 8).
+professeur(1, 'Tigli', 8, 13).
+professeur(2, 'Pinna', 7, 8).
+professeur(3, 'Mosser', 7, 8).
+professeur(4, 'Aygen', 3, 8).
+professeur(5, 'Tang', 2, 6).
+professeur(6, 'Buis', 4, 5).
+professeur(7, 'Lopez', 5, 10).
+professeur(8, 'Baude', 5, 5).
+professeur(9, 'Molines', 6, 8).
+professeur(10, 'Gallesio', 0, 8).
+professeur(11, 'Rueher', 0, 8).
+professeur(8, 'Huet', 1, 12).
 
 %%%%%%%%%%%%%%%%%%%
 %%%% Fonctions %%%%
@@ -97,7 +98,7 @@ professeur(8, 'Huet', 1, 25).
 jour(X):- jour(X,_,_). 
 
 % La journée qui a pour id X est un jour répetorié si on le trouve dans la base de données
-est_un_jour_travaille(X,EstTravaille):- jour(X,_,EstTravaille). 
+est_un_jour_travaille(X):- jour(X,_,1). 
 
 %%%% Crénaux %%%%
 % Le creneau qui a pour id X est un creneau répetorié si on le trouve dans la base de données
@@ -113,10 +114,14 @@ matiere(X):- matiere(X,_,_).
 
 %%% Professeur %%%
 % Un professeur d'id X est un professseur si on le trouve dans la base de données
-professeur(X):- professeur(X,_,_).
+professeur(X):- professeur(X,_,_,_).
+% X enseigne la matiere MatiereID
+enseigne_par(X, MatiereID):- professeur(X,_,MatiereID,_).
+% X est enseigné par ProfesseurID
+enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
 
-% Permet d'obtenir le nombre d'heures d'une matiere dans Nb_heures
-nb_heure_matiere(X,Nb_heures):- matiere(X,_,Nb_heures).
+% MatiereID fait X heures
+nb_heure_matiere(MatiereID,X):- matiere(MatiereID,_,X).
 
 %%%% Affichage au format csv %%%%
 
@@ -140,3 +145,4 @@ exportcsv([[Matiere, Salle, Creneau, ID_Jour, Prof]|List]) :-
 	% Ecriture premiere ligne du fichier csv pour google agenda
 	write('Subject, Start Date, Start Time, End Date, End Time, Description, Location'),nl,
 	printcsv([[Matiere, Salle, Creneau, ID_Jour, Prof]|List]).
+
