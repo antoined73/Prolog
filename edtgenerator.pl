@@ -62,12 +62,31 @@ salle(11, 'E+115').
 
 %%%% Matière %%%%
 % matiere(ID_Matiere, nom, nombre_heures_total)
-matiere(0, 'Programmation fonctionnelle', 35).
-matiere(1, 'Machine learning', 30).
-matiere(2, 'Chinois', 20).
-matiere(3, 'Anglais', 20).
-matiere(4, 'Communication', 15).
-matiere(5, 'Réseau', 35).
+matiere(0, 'Programmation fonctionnelle', 27).
+matiere(1, 'Programmation parallele', 22).
+matiere(2, 'Chinois', 12).
+matiere(3, 'Anglais', 14).
+matiere(4, 'Communication', 10).
+matiere(5, 'Réseau', 27).
+matiere(6, 'DevOps', 28).
+matiere(7, 'ISA', 28).
+matiere(8, 'WebServices', 24).
+
+%%%% Professeurs %%%
+% professeur(ID_Professeur, nom, ID_Matiere, nombre_heures_enseignement)
+professeur(0, 'Collet', 6, 15).
+professeur(1, 'Tigli', 8, 25).
+professeur(2, 'Pinna', 7, 15).
+professeur(3, 'Mosser', 7, 15).
+professeur(4, 'Aygen', 3, 15).
+professeur(5, 'Tang', 2, 12).
+professeur(6, 'Buis', 4, 10).
+professeur(7, 'Lopez', 5, 22).
+professeur(8, 'Baude', 5, 10).
+professeur(9, 'Molines', 6, 15).
+professeur(10, 'Gallesio', 0, 15).
+professeur(11, 'Rueher', 0, 15).
+professeur(8, 'Huet', 1, 25).
 
 %%%%%%%%%%%%%%%%%%%
 %%%% Fonctions %%%%
@@ -91,6 +110,10 @@ salle(X):- salle(X,_).
 %%%% Matière %%%%
 % Une matiere d'id X est une matiere si on la trouve dans la base de données
 matiere(X):- matiere(X,_,_).
+
+%%% Professeur %%%
+% Un professeur d'id X est un professseur si on le trouve dans la base de données
+professeur(X):- professeur(X,_,_).
 
 % Permet d'obtenir le nombre d'heures d'une matiere dans Nb_heures
 nb_heure_matiere(X,Nb_heures):- matiere(X,_,Nb_heures).
