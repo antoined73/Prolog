@@ -72,20 +72,15 @@ professeur(11, 'Rueher', 0, 8).
 professeur(8, 'Huet', 1, 12).
 
 
-matiere(0, 'Programmation fonctionnelle1', 12).
-matiere(0, 'Programmation fonctionnelle2', 12).
-matiere(0, 'Programmation fonctionnelle3', 12).
-matiere(0, 'Programmation fonctionnelle4', 12).
-matiere(0, 'Programmation fonctionnelle5', 12).
-
-matiere(1, 'Programmation parallele', 12).
+matiere(0, 'Programmation fonctionnelle', 4).
+matiere(1, 'Programmation parallele', 4).
 matiere(2, 'Chinois', 4).
 matiere(3, 'Anglais', 5).
 matiere(4, 'Communication', 3).
-matiere(5, 'Réseau', 12).
-matiere(6, 'DevOps', 12).
-matiere(7, 'ISA', 12).
-matiere(8, 'WebServices', 10).
+matiere(5, 'Réseau', 4).
+matiere(6, 'DevOps', 4).
+matiere(7, 'ISA', 4).
+matiere(8, 'WebServices', 4).
 
 %%%%%%%%%%%%%%%%%%%
 %%%% Fonctions %%%%
@@ -127,7 +122,7 @@ enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
 
 % Permet de tester le fait que N est bien inférieur aux heures voulues pour la matière NbHeuresMatiere
 nb_hours_assigned(Planning,MatiereNom,NbHeuresMatiere):-
-    write('nb_hours_assigned appele : '),write(Planning),nl,
+    %write('nb_hours_assigned appele : '),write(Planning),nl,
 	nb_hours_assigned_bis(Planning,MatiereNom,0, NbHeuresMatiere).
 
 % Si le cr?eau est assign?a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
@@ -190,14 +185,11 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :-
     salle(ID_Salle, NomSalle), % On parcours toutes les salles
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
     professeur(ID_Prof, NomProf,_,_), % On prend leur nom
-
-    
     
     \+member([_, _, ID_Creneau, NomJour, _], Planning), % On vérifie que le créneau c'est pas déjà pris
     \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
     \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
     %\+member([NomMatiere, _, _, _, _], Planning), % Contrainte vrifiant qu'on met pas 2 fois la même matiere avec le même nom
 
-
     append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le résultat au Planning`
-    ajouter_matiere_edt(T, Result).
+    ajouter_matiere_edt(AutresIDMatieres, Result).
