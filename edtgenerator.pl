@@ -181,7 +181,7 @@ ajouter_matiere_edt(AutresIDMatieres,Planning).
 
 ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, NbHrestant) :-
     matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
-    NbHrestant > 0, % On veut que NbHrestant ne dépasse pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
+    NbHrestant > 0, % On veut que NbHrestant soit superieur a 0 sinon on ajoute trop d'heures 
     jour(ID_Jour, NomJour), % On parcours tous les jours
     ID_Jour > Jourmin, % On prends le premier qui soit supérieur au jour minimum
     creneau(ID_Creneau,_,_,TempsTotalCreneau), % On prends tous les creneaux
