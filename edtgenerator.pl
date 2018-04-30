@@ -35,7 +35,7 @@ jour(25,'4/27/2018').
 %%%% Crénaux %%%%
 % creneau(ID_Creneau, horaire de début, horaire de fin, temps total)
 creneau(0, '8:00 AM', '10:00 AM', 2).
-creneau(1, '10:00 AM', '12:00 AM', 2).
+creneau(1, '10:00 AM', '12:00 PM', 2).
 creneau(2, '1:30 PM', '3:30 PM', 2).
 creneau(3, '3:30 PM', '5:30 PM', 2).
 
@@ -71,7 +71,13 @@ professeur(10, 'Gallesio', 0, 8).
 professeur(11, 'Rueher', 0, 8).
 professeur(8, 'Huet', 1, 12).
 
-matiere(0, 'Programmation fonctionnelle', 12).
+
+matiere(0, 'Programmation fonctionnelle1', 12).
+matiere(0, 'Programmation fonctionnelle2', 12).
+matiere(0, 'Programmation fonctionnelle3', 12).
+matiere(0, 'Programmation fonctionnelle4', 12).
+matiere(0, 'Programmation fonctionnelle5', 12).
+
 matiere(1, 'Programmation parallele', 12).
 matiere(2, 'Chinois', 4).
 matiere(3, 'Anglais', 5).
@@ -114,17 +120,20 @@ enseigne_par(X, MatiereID):- professeur(X,_,MatiereID,_).
 enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
 
 
+
 %%%%%%%%%%%%%%%%%%%
 %%%%  Compter  %%%%
 %%%%%%%%%%%%%%%%%%%
 
 % Permet de tester le fait que N est bien inférieur aux heures voulues pour la matière NbHeuresMatiere
-nb_hours_assigned(Planning,MatiereNom, NbHeuresMatiere):-
+nb_hours_assigned(Planning,MatiereNom):-
+    matiere(_,MatiereNom,NbHeuresMatiere), % Va chercher le nombre d'heures pour la matiere
 	nb_hours_assigned_bis(Planning,MatiereNom,0, NbHeuresMatiere).
 
 % Si le cr?eau est assign?a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
 nb_hours_assigned_bis([[MatiereNom,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
-	nb_hours_assigned_bis(L,MatiereNom,N+2, NbHeuresMatiere).
+    N1 is N+2, 
+	nb_hours_assigned_bis(L,MatiereNom,N1, NbHeuresMatiere).
 
 % Si le cr?eau n'est pas assign?a la matiere, on passe a la suivante.
 nb_hours_assigned_bis([[_,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
@@ -179,13 +188,12 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :-
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
     professeur(ID_Prof, NomProf,_,_), % On prend leur nom
 
-    nb_hours_assigned(Planning, NomMatiere, NbHeuresMatiere),
+    %nb_hours_assigned(Planning, NomMatiere),
     
-    
+    \+member([_, _, ID_Creneau, NomJour, _], Planning), % On vérifie que le créneau c'est pas déjà pris
     \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
     \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
-    \+member([_, _, ID_Creneau, NomJour, _], Planning),
-
+    \+member([NomMatiere, _, _, _, _], Planning), % Contrainte vrifiant qu'on met pas 2 fois la même matiere avec le même nom
 
 
     append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le résultat au Planning`
