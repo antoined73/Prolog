@@ -126,8 +126,8 @@ enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
 %%%%%%%%%%%%%%%%%%%
 
 % Permet de tester le fait que N est bien inférieur aux heures voulues pour la matière NbHeuresMatiere
-nb_hours_assigned(Planning,MatiereNom):-
-    matiere(_,MatiereNom,NbHeuresMatiere), % Va chercher le nombre d'heures pour la matiere
+nb_hours_assigned(Planning,MatiereNom,NbHeuresMatiere):-
+    write('nb_hours_assigned appele : '),write(Planning),nl,
 	nb_hours_assigned_bis(Planning,MatiereNom,0, NbHeuresMatiere).
 
 % Si le cr?eau est assign?a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
@@ -141,7 +141,7 @@ nb_hours_assigned_bis([[_,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
 
 % Si le planning est vide, on a la recherche voulue : on test le fait que N est bien inférieur aux heures voulues pour la matière
 nb_hours_assigned_bis([],_,N, NbHeuresMatiere):-
-    N =< NbHeuresMatiere.
+    NbHeuresMatiere is N.
 
 
 %%%% Affichage au format csv %%%%
@@ -181,6 +181,9 @@ ajouter_matiere_edt(ID_Matieres,Planning) :- ajouter_matiere_edt_bis(ID_Matieres
 
 ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :- 
     matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
+    nb_hours_assigned(Planning, NomMatiere, Nbh), % Nbh donne le nombre d'heures ajoutées au planning
+    write('Nombre d\'heures comptees = '),write(Nbh),nl,
+    NbHeuresMatiere > Nbh, % On veut que Nbh ne dépasse pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
     jour(ID_Jour, NomJour), % On parcours tous les jours
     ID_Jour > Jourmin, % On prends le premier qui soit supérieur au jour minimum
     creneau(ID_Creneau), % On prends tous les creneaux
@@ -188,12 +191,12 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :-
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
     professeur(ID_Prof, NomProf,_,_), % On prend leur nom
 
-    %nb_hours_assigned(Planning, NomMatiere),
+    
     
     \+member([_, _, ID_Creneau, NomJour, _], Planning), % On vérifie que le créneau c'est pas déjà pris
     \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
     \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
-    \+member([NomMatiere, _, _, _, _], Planning), % Contrainte vrifiant qu'on met pas 2 fois la même matiere avec le même nom
+    %\+member([NomMatiere, _, _, _, _], Planning), % Contrainte vrifiant qu'on met pas 2 fois la même matiere avec le même nom
 
 
     append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le résultat au Planning`
