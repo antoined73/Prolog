@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%
-%%%% DonnÈes %%%%
+%%%% Donn?s %%%%
 %%%%%%%%%%%%%%%%%
 
 %%%% Jours %%%%
@@ -32,8 +32,8 @@ jour(23,'4/25/2018').
 jour(24,'4/26/2018').
 jour(25,'4/27/2018').
 
-%%%% CrÈnaux %%%%
-% creneau(ID_Creneau, horaire de dÈbut, horaire de fin, temps total)
+%%%% Cr√©naux %%%%
+% creneau(ID_Creneau, horaire de d√©but, horaire de fin, temps total)
 creneau(0, '8:00 AM', '10:00 AM', 2).
 creneau(1, '10:00 AM', '12:00 AM', 2).
 creneau(2, '1:30 PM', '3:30 PM', 2).
@@ -53,7 +53,7 @@ salle(9, 'E+113').
 salle(10, 'E+114').
 salle(11, 'E+115').
 
-%%%% MatiËre %%%%
+%%%% Mati√®re %%%%
 
 %%%% Professeurs %%%
 % professeur(ID_Professeur, nom, ID_Matiere, nombre_heures_enseignement)
@@ -86,19 +86,19 @@ matiere(8, 'WebServices', 10).
 %%%%%%%%%%%%%%%%%%%
 
 %%%% Jours %%%%
-% La journÈe qui a pour id X est un jour rÈpetoriÈ si on le trouve dans la base de donnÈes
+% La journ√©e qui a pour id X est un jour r?etori?si on le trouve dans la base de donn?s
 jour(X):- jour(X,_,_). 
 
-%%%% CrÈnaux %%%%
-% Le creneau qui a pour id X est un creneau rÈpetoriÈ si on le trouve dans la base de donnÈes
-creneau(X):- creneau(X,_,_). 
+%%%% Cr?aux %%%%
+% Le creneau qui a pour id X est un creneau r?etori?si on le trouve dans la base de donn?s
+creneau(X):- creneau(X,_,_,_). 
 
 %%%% Salle %%%%
-% La salle d'id X est un salle si on la trouve dans la base de donnÈes
+% La salle d'id X est un salle si on la trouve dans la base de donn?s
 salle(X):- salle(X,_).
 
-%%%% MatiËre %%%%
-% Une matiere d'id X est une matiere si on la trouve dans la base de donnÈes
+%%%% Mati?e %%%%
+% Une matiere d'id X est une matiere si on la trouve dans la base de donn?s
 matiere(X):- matiere(X,_,_).
 
 %%% Professeur %%%
@@ -118,16 +118,16 @@ enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
 %%%%  Compter  %%%%
 %%%%%%%%%%%%%%%%%%%
 
-% Permet d'obtenir dans R le nombre d'heure deja prÈsente dans le planning pour la matiere M voulue
+% Permet d'obtenir dans R le nombre d'heure deja pr?ente dans le planning pour la matiere M voulue
 nb_hours_assigned(Planning,M,R):-
 	nb_hours_assigned_bis(Planning,M,0,R).
 
-% Si le crÈneau est assignÈ a la matiere M, on ajoute 2h au res et on passe a la suivante.
+% Si le cr?eau est assign?a la matiere M, on ajoute 2h au res et on passe a la suivante.
 nb_hours_assigned_bis([[M,_,_,_,_]|L],M,N,R):-
 	N1 is N+2,
 	nb_hours_assigned_bis(L,M,N1,R).
 
-% Si le crÈneau n'est pas assignÈ a la matiere, on passe a la suivante.
+% Si le cr?eau n'est pas assign?a la matiere, on passe a la suivante.
 nb_hours_assigned_bis([[_,_,_,_,_]|L],M,N,R):-
 	nb_hours_assigned_bis(L,M,N,R).
 
@@ -139,10 +139,9 @@ nb_hours_assigned_bis([],_,N,R):-R is N.
 
 % Ecriture au format csv de la liste des cours : printcsv(Liste_des_cours)
 printcsv([]).
-printcsv([[Matiere, Salle, Creneau, ID_Jour, Prof]|List]) :-
+printcsv([[Matiere, Salle, ID_Creneau, Jour, Prof]|List]) :-
 % Subject, Start Date, Start Time, End Date, End Time, Description, Location
-    jour(ID_Jour, Jour),
-    creneau(Creneau,Hdebut,Hfin),
+    creneau(ID_Creneau,Hdebut,Hfin,_),
     write(Matiere),write(' - '),write(Prof),write(','), %Subject
     write(Jour),write(','),                             %Start Date
     write(Hdebut),write(','),                           %Start Time
@@ -152,9 +151,35 @@ printcsv([[Matiere, Salle, Creneau, ID_Jour, Prof]|List]) :-
     write(Salle),write(','),nl,                         %Location
     printcsv(List).
 
-% MÈthode d'export du .csv : exportcsv(Liste_des_cours)
-exportcsv([[Matiere, Salle, Creneau, ID_Jour, Prof]|List]) :-
+% M?hode d'export du .csv : exportcsv(Liste_des_cours)
+exportcsv([[Matiere, Salle, ID_Creneau, Jour, Prof]|List]) :-
 	% Ecriture premiere ligne du fichier csv pour google agenda
 	write('Subject, Start Date, Start Time, End Date, End Time, Description, Location'),nl,
-	printcsv([[Matiere, Salle, Creneau, ID_Jour, Prof]|List]).
+	printcsv([[Matiere, Salle, ID_Creneau, Jour, Prof]|List]).
 
+
+genere_edt :-
+    findall(X, matiere(X), L),
+    ajouter_matiere_edt(L, []).
+
+%Exemple
+% Planning : [[NomMatiere,NomSalle,ID_Creneau,NomJour,NomProf],[NomMatiere,NomSalle,ID_Creneau,NomJour,NomProf]...]
+% ajouter_matiere_edt( ID_Matieres_a_ajouter, Planning)
+ajouter_matiere_edt([], Planning) :- write(Planning),nl,exportcsv(Planning).
+
+ajouter_matiere_edt(ID_Matieres,Planning) :- ajouter_matiere_edt_bis(ID_Matieres,Planning,0).
+
+
+ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :- 
+    matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
+    jour(ID_Jour, NomJour), % On parcours tous les jours
+    ID_Jour > Jourmin, % On prends le premier qui soit sup√©rieur au jour minimum
+    creneau(ID_Creneau), % On prends tous les creneaux
+    salle(ID_Salle, NomSalle), % On parcours toutes les salles
+    enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
+    professeur(ID_Prof, NomProf,_,_), % On prend leur nom
+
+    \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On v√©rifie qu'une sc√©ance sur la meme salle et le meme cr√©neaux existe pas
+
+    append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le r√©sultat au Planning`
+    ajouter_matiere_edt(T, Result).
