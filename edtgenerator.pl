@@ -4,7 +4,7 @@
 
 %%%% Jours %%%%
 % jour(ID_jour, date)
-% Semaine 1 
+% Semaine 1
 jour(0,'4/2/2018').
 jour(1,'4/3/2018').
 jour(2,'4/4/2018').
@@ -18,7 +18,7 @@ jour(9,'4/11/2018').
 jour(10,'4/12/2018').
 jour(11,'4/13/2018').
 
-% Semaine 3 
+% Semaine 3
 jour(14,'4/16/2018').
 jour(15,'4/17/2018').
 jour(16,'4/18/2018').
@@ -88,11 +88,11 @@ matiere(8, 'WebServices', 4).
 
 %%%% Jours %%%%
 % La journée qui a pour id X est un jour r?etori?si on le trouve dans la base de donn?s
-jour(X):- jour(X,_,_). 
+jour(X):- jour(X,_). 
 
 %%%% Cr?aux %%%%
 % Le creneau qui a pour id X est un creneau r?etori?si on le trouve dans la base de donn?s
-creneau(X):- creneau(X,_,_,_). 
+creneau(X):- creneau(X,_,_,_).
 
 %%%% Salle %%%%
 % La salle d'id X est un salle si on la trouve dans la base de donn?s
@@ -127,7 +127,7 @@ nb_hours_assigned(Planning,MatiereNom,NbHeuresMatiere):-
 
 % Si le cr?eau est assign?a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
 nb_hours_assigned_bis([[MatiereNom,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
-    N1 is N+2, 
+    N1 is N+2,
 	nb_hours_assigned_bis(L,MatiereNom,N1, NbHeuresMatiere).
 
 % Si le cr?eau n'est pas assign?a la matiere, on passe a la suivante.
@@ -174,7 +174,7 @@ ajouter_matiere_edt([], Planning) :- write(Planning),nl,exportcsv(Planning).
 ajouter_matiere_edt(ID_Matieres,Planning) :- ajouter_matiere_edt_bis(ID_Matieres,Planning,0).
 
 
-ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :- 
+ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :-
     matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
     nb_hours_assigned(Planning, NomMatiere, Nbh), % Nbh donne le nombre d'heures ajoutées au planning
     write('Nombre d\'heures comptees = '),write(Nbh),nl,
@@ -185,7 +185,7 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :-
     salle(ID_Salle, NomSalle), % On parcours toutes les salles
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
     professeur(ID_Prof, NomProf,_,_), % On prend leur nom
-    
+
     \+member([_, _, ID_Creneau, NomJour, _], Planning), % On vérifie que le créneau c'est pas déjà pris
     \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
     \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
