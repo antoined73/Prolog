@@ -38,6 +38,7 @@ creneau(0, '8:00 AM', '10:00 AM', 2).
 creneau(1, '10:00 AM', '12:00 PM', 2).
 creneau(2, '1:30 PM', '3:30 PM', 2).
 creneau(3, '3:30 PM', '5:30 PM', 2).
+creneau(4, '5:30 PM', '6:30 PM', 1).
 
 %%%% Salle %%%%
 salle(0, 'O+110').
@@ -75,11 +76,11 @@ professeur(8, 'Huet', 1, 12).
 matiere(0, 'Programmation fonctionnelle', 14).
 matiere(1, 'Programmation parallele', 14).
 matiere(2, 'Chinois', 4).
-matiere(3, 'Anglais', 6).
+matiere(3, 'Anglais', 7).
 matiere(4, 'Communication', 4).
 matiere(5, 'Reseau', 14).
 matiere(6, 'DevOps', 4).
-matiere(7, 'ISA', 4).
+matiere(7, 'ISA', 5).
 matiere(8, 'WebServices', 14).
 
 %%%%%%%%%%%%%%%%%%%
@@ -187,17 +188,19 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, Limite, Nb
     NbHrestant > 0, % On veut que Nbh ne dépasse pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
     jour(ID_Jour, NomJour), % On parcours tous les jours
     ID_Jour > Jourmin, % On prends le premier qui soit supérieur au jour minimum
-    creneau(ID_Creneau), % On prends tous les creneaux
+    creneau(ID_Creneau,_,_,TempsTotalCreneau), % On prends tous les creneaux
     salle(ID_Salle, NomSalle), % On parcours toutes les salles
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
     professeur(ID_Prof, NomProf,_,_), % On prend leur nom
 
+    % Contraintes
     \+member([_, _, ID_Creneau, NomJour, _], Planning), % On vérifie que le créneau c'est pas déjà pris
     \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
     \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
     %\+member([NomMatiere, _, _, _, _], Planning), % Contrainte vrifiant qu'on met pas 2 fois la même matiere avec le même nom
 
     append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le résultat au Planning`
-    Nbr is NbHrestant-2,
+    Nbr is NbHrestant-TempsTotalCreneau,
+    Nbr >= 0,
     ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Result, Jourmin, Limite, Nbr).
 
