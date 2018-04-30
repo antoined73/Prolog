@@ -57,20 +57,20 @@ salle(11, 'E+115').
 %%%% Matiere %%%%
 
 %%%% Professeurs %%%
-% professeur(ID_Professeur, nom, ID_Matiere, nombre_heures_enseignement)
-professeur(0, 'Collet', 6, 8).
-professeur(1, 'Tigli', 8, 13).
-professeur(2, 'Pinna', 7, 8).
-professeur(3, 'Mosser', 7, 8).
-professeur(4, 'Aygen', 3, 8).
-professeur(5, 'Tang', 2, 6).
-professeur(6, 'Buis', 4, 5).
-professeur(7, 'Lopez', 5, 10).
-professeur(8, 'Baude', 5, 5).
-professeur(9, 'Molines', 6, 8).
-professeur(10, 'Gallesio', 0, 8).
-professeur(11, 'Rueher', 0, 8).
-professeur(8, 'Huet', 1, 12).
+% professeur(ID_Professeur, nom, ID_Matiere)
+professeur(0, 'Collet', 6).
+professeur(1, 'Tigli', 8).
+professeur(2, 'Pinna', 7).
+professeur(3, 'Mosser', 7).
+professeur(4, 'Aygen', 3).
+professeur(5, 'Tang', 2).
+professeur(6, 'Buis', 4).
+professeur(7, 'Lopez', 5).
+professeur(8, 'Baude', 5).
+professeur(9, 'Molines', 6).
+professeur(10, 'Gallesio', 0).
+professeur(11, 'Rueher', 0).
+professeur(8, 'Huet', 1).
 
 
 matiere(0, 'Programmation fonctionnelle', 14).
@@ -203,7 +203,6 @@ ajouter_matiere_edt([], Planning) :- write(Planning),nl,exportcsv(Planning).
 
 ajouter_matiere_edt([ID_Mat|AutresIDMatieres],Planning) :- 
 matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
-write('ajout '),write(NbHeuresMatiere),write(NomMatiere),nl,
 ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres],Planning,0,NbHeuresMatiere).
 
 
@@ -213,7 +212,6 @@ ajouter_matiere_edt(AutresIDMatieres,Planning).
 
 ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Limite, NbHrestant) :-
     matiere(ID_Mat, NomMatiere, _),
-    write(NbHrestant),nl,
     NbHrestant > 0, % On veut que Nbh ne d�passe pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
     jour(_, NomJour), % On parcours tous les jours
     creneau(ID_Creneau,_,_,TempsTotalCreneau), % On prends tous les creneaux
