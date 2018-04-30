@@ -109,11 +109,11 @@ matiere(X):- matiere(X,_,_).
 nb_heure_matiere(X,Nb_heures):- matiere(X,_,Nb_heures).
 
 % Un professeur d'id X est un professseur si on le trouve dans la base de données
-professeur(X):- professeur(X,_,_,_).
+professeur(X):- professeur(X,_,_).
 % X enseigne la matiere MatiereID
-enseigne_par(X, MatiereID):- professeur(X,_,MatiereID,_).
+enseigne_par(X, MatiereID):- professeur(X,_,MatiereID).
 % X est enseigné par ProfesseurID
-enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
+enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X).
 
 %%%%%%%%%%%%%%%%%%%
 %%%%  Compter  %%%%
@@ -121,7 +121,6 @@ enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
 
 % Permet de tester le fait que N est bien inférieur aux heures voulues pour la matière NbHeuresMatiere
 nb_hours_assigned(Planning,MatiereNom,NbHeuresMatiere):-
-    %write('nb_hours_assigned appele : '),write(Planning),nl,
 	nb_hours_assigned_bis(Planning,MatiereNom,0, NbHeuresMatiere).
 
 % Si le creneau est assignee a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
@@ -165,6 +164,20 @@ genere_edt :-
     findall(X, matiere(X), L),
     ajouter_matiere_edt(L, []).
 
+% Espacement des heures d'une meme matiere
+validDay(NomJour, Planning, NomMatiere):-
+    validDayBis(NomJour, Planning, NomMatiere, 2).
+
+validDayBis(NomJour, [[NomMatiere,_,_,NomJour,_]|Planning], NomMatiere, Count):-
+    Res is Count-1,
+    validDayBis(NomJour,Planning,NomMatiere,Res).
+
+validDayBis(NomJour, [[_,_,_,_,_]|Planning], NomMatiere, Count):-
+    validDayBis(NomJour,Planning,NomMatiere,Count).
+
+validDayBis(_, [], _, Count):-
+    Count =< 0.
+
 %Exemple
 % Planning : [[NomMatiere,NomSalle,ID_Creneau,NomJour,NomProf],[NomMatiere,NomSalle,ID_Creneau,NomJour,NomProf]...]
 % ajouter_matiere_edt( ID_Matieres_a_ajouter, Planning)
@@ -187,9 +200,10 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, NbHrestant
     creneau(ID_Creneau,_,_,TempsTotalCreneau), % On prends tous les creneaux
     salle(ID_Salle, NomSalle), % On parcours toutes les salles
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
-    professeur(ID_Prof, NomProf,_,_), % On prend leur nom
+    professeur(ID_Prof, NomProf,_), % On prend leur nom
 
     % Contraintes
+    \+validDay(NomJour, Planning, NomMatiere),
     \+member([_, _, ID_Creneau, NomJour, _], Planning), % On vérifie que le créneau c'est pas déjà pris
     \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
     \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
