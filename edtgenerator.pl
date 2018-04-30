@@ -1,39 +1,39 @@
 %%%%%%%%%%%%%%%%%
-%%%% Donnees %%%%
+%%%% Donn?s %%%%
 %%%%%%%%%%%%%%%%%
 
 %%%% Jours %%%%
 % jour(ID_jour, date)
 % Semaine 1
-jour(0,'4/2/2018').
-jour(1,'4/3/2018').
-jour(2,'4/4/2018').
-jour(3,'4/5/2018').
-jour(4,'4/6/2018').
+jour(0,'4/2/2018',0).
+jour(1,'4/3/2018',0).
+jour(2,'4/4/2018',0).
+jour(3,'4/5/2018',0).
+jour(4,'4/6/2018',0).
 
 % Semaine 2
-jour(7,'4/9/2018').
-jour(8,'4/10/2018').
-jour(9,'4/11/2018').
-jour(10,'4/12/2018').
-jour(11,'4/13/2018').
+jour(7,'4/9/2018',1).
+jour(8,'4/10/2018',1).
+jour(9,'4/11/2018',1).
+jour(10,'4/12/2018',1).
+jour(11,'4/13/2018',1).
 
 % Semaine 3
-jour(14,'4/16/2018').
-jour(15,'4/17/2018').
-jour(16,'4/18/2018').
-jour(17,'4/19/2018').
-jour(18,'4/20/2018').
+jour(14,'4/16/2018',2).
+jour(15,'4/17/2018',2).
+jour(16,'4/18/2018',2).
+jour(17,'4/19/2018',2).
+jour(18,'4/20/2018',2).
 
 % Semaine 4
-jour(21,'4/23/2018').
-jour(22,'4/24/2018').
-jour(23,'4/25/2018').
-jour(24,'4/26/2018').
-jour(25,'4/27/2018').
+jour(21,'4/23/2018',3).
+jour(22,'4/24/2018',3).
+jour(23,'4/25/2018',3).
+jour(24,'4/26/2018',3).
+jour(25,'4/27/2018',3).
 
-%%%% Crenaux %%%%
-% creneau(ID_Creneau, horaire de debut, horaire de fin, temps total)
+%%%% Cr?naux %%%%
+% creneau(ID_Creneau, horaire de d?but, horaire de fin, temps total)
 creneau(0, '8:00 AM', '10:00 AM', 2).
 creneau(1, '10:00 AM', '12:00 PM', 2).
 creneau(2, '1:30 PM', '3:30 PM', 2).
@@ -54,23 +54,23 @@ salle(9, 'E+113').
 salle(10, 'E+114').
 salle(11, 'E+115').
 
-%%%% Matiere %%%%
+%%%% Mati?re %%%%
 
 %%%% Professeurs %%%
-% professeur(ID_Professeur, nom, ID_Matiere)
-professeur(0, 'Collet', 6).
-professeur(1, 'Tigli', 8).
-professeur(2, 'Pinna', 7).
-professeur(3, 'Mosser', 7).
-professeur(4, 'Aygen', 3).
-professeur(5, 'Tang', 2).
-professeur(6, 'Buis', 4).
-professeur(7, 'Lopez', 5).
-professeur(8, 'Baude', 5).
-professeur(9, 'Molines', 6).
-professeur(10, 'Gallesio', 0).
-professeur(11, 'Rueher', 0).
-professeur(8, 'Huet', 1).
+% professeur(ID_Professeur, nom, ID_Matiere, nombre_heures_enseignement)
+professeur(0, 'Collet', 6, 8).
+professeur(1, 'Tigli', 8, 13).
+professeur(2, 'Pinna', 7, 8).
+professeur(3, 'Mosser', 7, 8).
+professeur(4, 'Aygen', 3, 8).
+professeur(5, 'Tang', 2, 6).
+professeur(6, 'Buis', 4, 5).
+professeur(7, 'Lopez', 5, 10).
+professeur(8, 'Baude', 5, 5).
+professeur(9, 'Molines', 6, 8).
+professeur(10, 'Gallesio', 0, 8).
+professeur(11, 'Rueher', 0, 8).
+professeur(8, 'Huet', 1, 12).
 
 
 matiere(0, 'Programmation fonctionnelle', 14).
@@ -88,21 +88,21 @@ matiere(8, 'WebServices', 14).
 %%%%%%%%%%%%%%%%%%%
 
 %%%% Jours %%%%
-% La journee qui a pour id X est un jour si on le trouve dans la base de donnees
-jour(X):- jour(X,_).
+% La journ?e qui a pour id X est un jour r?etori?si on le trouve dans la base de donn?s
+jour(X):- jour(X,_,_).
 
-%%%% Creaux %%%%
-% Le creneau qui a pour id X est un creneau si on le trouve dans la base de donnees
+%%%% Cr?aux %%%%
+% Le creneau qui a pour id X est un creneau r?etori?si on le trouve dans la base de donn?s
 creneau(X):- creneau(X,_,_,_).
 
 hour_creneau(X,Hour):-creneau(X,_,_,Hour).
 
 %%%% Salle %%%%
-% La salle d'id X est un salle si on la trouve dans la base de donnees
+% La salle d'id X est un salle si on la trouve dans la base de donn?s
 salle(X):- salle(X,_).
 
-%%%% Matiere %%%%
-% Une matiere d'id X est une matiere si on la trouve dans la base de donnees
+%%%% Mati?e %%%%
+% Une matiere d'id X est une matiere si on la trouve dans la base de donn?s
 matiere(X):- matiere(X,_,_).
 
 %%% Professeur %%%
@@ -110,31 +110,34 @@ matiere(X):- matiere(X,_,_).
 % Permet d'obtenir le nombre d'heures d'une matiere dans Nb_heures
 nb_heure_matiere(X,Nb_heures):- matiere(X,_,Nb_heures).
 
-% Un professeur d'id X est un professseur si on le trouve dans la base de données
-professeur(X):- professeur(X,_,_).
+% Un professeur d'id X est un professseur si on le trouve dans la base de donn?es
+professeur(X):- professeur(X,_,_,_).
 % X enseigne la matiere MatiereID
-enseigne_par(X, MatiereID):- professeur(X,_,MatiereID).
-% X est enseigné par ProfesseurID
-enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X).
+enseigne_par(X, MatiereID):- professeur(X,_,MatiereID,_).
+% X est enseign? par ProfesseurID
+enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X,_).
+
+
 
 %%%%%%%%%%%%%%%%%%%
 %%%%  Compter  %%%%
 %%%%%%%%%%%%%%%%%%%
 
-% Permet de tester le fait que N est bien inf�rieur aux heures voulues pour la mati�re NbHeuresMatiere
+% Permet de tester le fait que N est bien inf?rieur aux heures voulues pour la mati?re NbHeuresMatiere
 nb_hours_assigned(Planning,MatiereNom,NbHeuresMatiere):-
+    %write('nb_hours_assigned appele : '),write(Planning),nl,
 	nb_hours_assigned_bis(Planning,MatiereNom,0, NbHeuresMatiere).
 
-% Si le creneau est assigne a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
+% Si le cr?eau est assign?a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
 nb_hours_assigned_bis([[MatiereNom,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
     N1 is N+2,
 	nb_hours_assigned_bis(L,MatiereNom,N1, NbHeuresMatiere).
 
-% Si le creneau n'est pas assigne a la matiere, on passe a la suivante.
+% Si le cr?eau n'est pas assign?a la matiere, on passe a la suivante.
 nb_hours_assigned_bis([[_,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
 	nb_hours_assigned_bis(L,MatiereNom,N, NbHeuresMatiere).
 
-% Si le planning est vide, on a la recherche voulue : on test le fait que N est bien inf�rieur aux heures voulues pour la mati�re
+% Si le planning est vide, on a la recherche voulue : on test le fait que N est bien inf?rieur aux heures voulues pour la mati?re
 nb_hours_assigned_bis([],_,N, NbHeuresMatiere):-
     NbHeuresMatiere is N.
 
@@ -142,17 +145,18 @@ nb_hours_assigned_bis([],_,N, NbHeuresMatiere):-
 %%%%    Jour   %%%%
 %%%%%%%%%%%%%%%%%%%
 
-validDay(NomJour, Planning, NomMatiere):-
-    validDayBis(NomJour, Planning, NomMatiere, 2).
+validDay(Planning, NomMatiere,Semaine):-
+    validDayBis(Planning, NomMatiere, 2,Semaine).
 
-validDayBis(NomJour, [[NomMatiere,_,_,NomJour,_]|Planning], NomMatiere, Count):-
+validDayBis([[NomMatiere,_,_,NomJour,_]|Planning], NomMatiere, Count,Semaine):-
     Res is Count-1,
-    validDayBis(NomJour,Planning,NomMatiere,Res).
+    jour(_,NomJour,Semaine),
+    validDayBis(Planning,NomMatiere,Res,Semaine).
 
-validDayBis(NomJour, [[_,_,_,_,_]|Planning], NomMatiere, Count):-
-    validDayBis(NomJour,Planning,NomMatiere,Count).
+validDayBis([[_,_,_,_,_]|Planning], NomMatiere, Count,Semaine):-
+    validDayBis(Planning,NomMatiere,Count,Semaine).
 
-validDayBis(_, [], _, Count):-
+validDayBis([], _, Count,_):-
     Count =< 0.
 
 %%%% Affichage au format csv %%%%
@@ -171,7 +175,7 @@ printcsv([[Matiere, Salle, ID_Creneau, Jour, Prof]|List]) :-
     write(Salle),write(','),nl,                         %Location
     printcsv(List).
 
-% Methode d'export du .csv : exportcsv(Liste_des_cours)
+% M?hode d'export du .csv : exportcsv(Liste_des_cours)
 exportcsv([[Matiere, Salle, ID_Creneau, Jour, Prof]|List]) :-
 	% Ecriture premiere ligne du fichier csv pour google agenda
 	write('Subject, Start Date, Start Time, End Date, End Time, Description, Location'),nl,
@@ -182,20 +186,6 @@ genere_edt :-
     findall(X, matiere(X), L),
     ajouter_matiere_edt(L, []).
 
-% Espacement des heures d'une meme matiere
-validDay(NomJour, Planning, NomMatiere):-
-    validDayBis(NomJour, Planning, NomMatiere, 2).
-
-validDayBis(NomJour, [[NomMatiere,_,_,NomJour,_]|Planning], NomMatiere, Count):-
-    Res is Count-1,
-    validDayBis(NomJour,Planning,NomMatiere,Res).
-
-validDayBis(NomJour, [[_,_,_,_,_]|Planning], NomMatiere, Count):-
-    validDayBis(NomJour,Planning,NomMatiere,Count).
-
-validDayBis(_, [], _, Count):-
-    Count =< 0.
-
 %Exemple
 % Planning : [[NomMatiere,NomSalle,ID_Creneau,NomJour,NomProf],[NomMatiere,NomSalle,ID_Creneau,NomJour,NomProf]...]
 % ajouter_matiere_edt( ID_Matieres_a_ajouter, Planning)
@@ -203,6 +193,7 @@ ajouter_matiere_edt([], Planning) :- write(Planning),nl,exportcsv(Planning).
 
 ajouter_matiere_edt([ID_Mat|AutresIDMatieres],Planning) :- 
 matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
+write('ajout '),write(NbHeuresMatiere),write(NomMatiere),nl,
 ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres],Planning,0,NbHeuresMatiere).
 
 
@@ -212,20 +203,22 @@ ajouter_matiere_edt(AutresIDMatieres,Planning).
 
 ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Limite, NbHrestant) :-
     matiere(ID_Mat, NomMatiere, _),
-    NbHrestant > 0, % On veut que Nbh ne d�passe pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
-    jour(_, NomJour), % On parcours tous les jours
+    write(NbHrestant),nl,
+    NbHrestant > 0, % On veut que Nbh ne d?passe pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
+    jour(_, NomJour,ID_Semaine), % On parcours tous les jours
     creneau(ID_Creneau,_,_,TempsTotalCreneau), % On prends tous les creneaux
     salle(_, NomSalle), % On parcours toutes les salles
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
-    professeur(ID_Prof, NomProf,_), % On prend leur nom
+    professeur(ID_Prof, NomProf,_,_), % On prend leur nom
 
     % Contraintes
-    \+validDay(NomJour, Planning, NomMatiere),
-    \+member([_, _, ID_Creneau, NomJour, _], Planning), % On vérifie que le créneau c'est pas déjà pris
-    \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
-    \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
+    \+validDay(Planning, NomMatiere,ID_Semaine),
+    \+member([_, _, ID_Creneau, NomJour, _], Planning), % On v?rifie que le cr?neau c'est pas d?j? pris
+    \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On v?rifie qu'une sc?ance sur la meme salle et le meme cr?neaux existe pas
+    \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On v?rifie qu'un prof n'a pas cours le m?me jour pendant ce cr?neau
+    %\+member([NomMatiere, _, _, _, _], Planning), % Contrainte vrifiant qu'on met pas 2 fois la m?me matiere avec le m?me nom
 
-    append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le r�sultat au Planning`
+    append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le r?sultat au Planning`
     Nbr is NbHrestant-TempsTotalCreneau,
     Nbr >= 0,
 
