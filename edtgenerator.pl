@@ -72,15 +72,15 @@ professeur(11, 'Rueher', 0, 8).
 professeur(8, 'Huet', 1, 12).
 
 
-matiere(0, 'Programmation fonctionnelle', 4).
-matiere(1, 'Programmation parallele', 4).
+matiere(0, 'Programmation fonctionnelle', 14).
+matiere(1, 'Programmation parallele', 14).
 matiere(2, 'Chinois', 4).
-matiere(3, 'Anglais', 5).
-matiere(4, 'Communication', 3).
-matiere(5, 'Réseau', 4).
+matiere(3, 'Anglais', 6).
+matiere(4, 'Communication', 4).
+matiere(5, 'Reseau', 14).
 matiere(6, 'DevOps', 4).
 matiere(7, 'ISA', 4).
-matiere(8, 'WebServices', 4).
+matiere(8, 'WebServices', 14).
 
 %%%%%%%%%%%%%%%%%%%
 %%%% Fonctions %%%%
@@ -171,14 +171,20 @@ genere_edt :-
 % ajouter_matiere_edt( ID_Matieres_a_ajouter, Planning)
 ajouter_matiere_edt([], Planning) :- write(Planning),nl,exportcsv(Planning).
 
-ajouter_matiere_edt(ID_Matieres,Planning) :- ajouter_matiere_edt_bis(ID_Matieres,Planning,0).
+ajouter_matiere_edt([ID_Mat|AutresIDMatieres],Planning) :- 
+matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
+write('ajout '),write(NbHeuresMatiere),write(NomMatiere),nl,
+ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres],Planning,0,0,NbHeuresMatiere).
 
 
-ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :-
+ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, Limite , Nbr) :- 
+Nbr =< Limite,
+ajouter_matiere_edt(AutresIDMatieres,Planning). 
+
+ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, Limite, NbHrestant) :-
     matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
-    nb_hours_assigned(Planning, NomMatiere, Nbh), % Nbh donne le nombre d'heures ajoutées au planning
-    write('Nombre d\'heures comptees = '),write(Nbh),nl,
-    NbHeuresMatiere > Nbh, % On veut que Nbh ne dépasse pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
+    write(NbHrestant),nl,
+    NbHrestant > 0, % On veut que Nbh ne dépasse pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
     jour(ID_Jour, NomJour), % On parcours tous les jours
     ID_Jour > Jourmin, % On prends le premier qui soit supérieur au jour minimum
     creneau(ID_Creneau), % On prends tous les creneaux
@@ -192,4 +198,6 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin) :-
     %\+member([NomMatiere, _, _, _, _], Planning), % Contrainte vrifiant qu'on met pas 2 fois la même matiere avec le même nom
 
     append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le résultat au Planning`
-    ajouter_matiere_edt(AutresIDMatieres, Result).
+    Nbr is NbHrestant-2,
+    ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Result, Jourmin, Limite, Nbr).
+
