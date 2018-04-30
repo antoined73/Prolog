@@ -12,28 +12,28 @@ jour(3,'4/5/2018').
 jour(4,'4/6/2018').
 
 % Semaine 2
-jour(5,'4/9/2018').
-jour(6,'4/10/2018').
-jour(7,'4/11/2018').
-jour(8,'4/12/2018').
-jour(9,'4/13/2018').
+jour(7,'4/9/2018').
+jour(8,'4/10/2018').
+jour(9,'4/11/2018').
+jour(10,'4/12/2018').
+jour(11,'4/13/2018').
 
 % Semaine 3
-jour(10,'4/16/2018').
-jour(11,'4/17/2018').
-jour(12,'4/18/2018').
-jour(13,'4/19/2018').
-jour(14,'4/20/2018').
+jour(14,'4/16/2018').
+jour(15,'4/17/2018').
+jour(16,'4/18/2018').
+jour(17,'4/19/2018').
+jour(18,'4/20/2018').
 
 % Semaine 4
-jour(15,'4/23/2018').
-jour(16,'4/24/2018').
-jour(17,'4/25/2018').
-jour(18,'4/26/2018').
-jour(19,'4/27/2018').
+jour(21,'4/23/2018').
+jour(22,'4/24/2018').
+jour(23,'4/25/2018').
+jour(24,'4/26/2018').
+jour(25,'4/27/2018').
 
-%%%% Crénaux %%%%
-% creneau(ID_Creneau, horaire de début, horaire de fin, temps total)
+%%%% Crenaux %%%%
+% creneau(ID_Creneau, horaire de debut, horaire de fin, temps total)
 creneau(0, '8:00 AM', '10:00 AM', 2).
 creneau(1, '10:00 AM', '12:00 PM', 2).
 creneau(2, '1:30 PM', '3:30 PM', 2).
@@ -41,7 +41,6 @@ creneau(3, '3:30 PM', '5:30 PM', 2).
 creneau(4, '5:30 PM', '6:30 PM', 1).
 
 %%%% Salle %%%%
-% salle(ID_Salle, NomSalle)
 salle(0, 'O+110').
 salle(1, 'O+111').
 salle(2, 'O+112').
@@ -55,24 +54,25 @@ salle(9, 'E+113').
 salle(10, 'E+114').
 salle(11, 'E+115').
 
-%%%% Professeurs %%%
-% professeur(ID_Professeur, nom, ID_Matiere)
-professeur(0, 'Collet', 6).
-professeur(1, 'Tigli', 8).
-professeur(2, 'Pinna', 7).
-professeur(3, 'Mosser', 7).
-professeur(4, 'Aygen', 3).
-professeur(5, 'Tang', 2).
-professeur(6, 'Buis', 4).
-professeur(7, 'Lopez', 5).
-professeur(8, 'Baude', 5).
-professeur(9, 'Molines', 6).
-professeur(10, 'Gallesio', 0).
-professeur(11, 'Rueher', 0).
-professeur(8, 'Huet', 1).
+%%%% Matiere %%%%
 
-%%%% Matière %%%%
-% matiere(ID_matiere, NomMatiere, Nombre_heures_matiere)
+%%%% Professeurs %%%
+% professeur(ID_Professeur, nom, ID_Matiere, nombre_heures_enseignement)
+professeur(0, 'Collet', 6, 8).
+professeur(1, 'Tigli', 8, 13).
+professeur(2, 'Pinna', 7, 8).
+professeur(3, 'Mosser', 7, 8).
+professeur(4, 'Aygen', 3, 8).
+professeur(5, 'Tang', 2, 6).
+professeur(6, 'Buis', 4, 5).
+professeur(7, 'Lopez', 5, 10).
+professeur(8, 'Baude', 5, 5).
+professeur(9, 'Molines', 6, 8).
+professeur(10, 'Gallesio', 0, 8).
+professeur(11, 'Rueher', 0, 8).
+professeur(8, 'Huet', 1, 12).
+
+
 matiere(0, 'Programmation fonctionnelle', 14).
 matiere(1, 'Programmation parallele', 14).
 matiere(2, 'Chinois', 4).
@@ -88,12 +88,14 @@ matiere(8, 'WebServices', 14).
 %%%%%%%%%%%%%%%%%%%
 
 %%%% Jours %%%%
-% La journée qui a pour id X est un jour si on le trouve dans la base de donnees
-jour(X):- jour(X,_). 
+% La journee qui a pour id X est un jour si on le trouve dans la base de donnees
+jour(X):- jour(X,_).
 
-%%%% Creneaux %%%%
+%%%% Creaux %%%%
 % Le creneau qui a pour id X est un creneau si on le trouve dans la base de donnees
 creneau(X):- creneau(X,_,_,_).
+
+hour_creneau(X,Hour):-creneau(X,_,_,Hour).
 
 %%%% Salle %%%%
 % La salle d'id X est un salle si on la trouve dans la base de donnees
@@ -119,23 +121,39 @@ enseigne(ProfesseurID, X):- professeur(ProfesseurID,_,X).
 %%%%  Compter  %%%%
 %%%%%%%%%%%%%%%%%%%
 
-% Permet de tester le fait que N est bien inférieur aux heures voulues pour la matière NbHeuresMatiere
+% Permet de tester le fait que N est bien inf�rieur aux heures voulues pour la mati�re NbHeuresMatiere
 nb_hours_assigned(Planning,MatiereNom,NbHeuresMatiere):-
 	nb_hours_assigned_bis(Planning,MatiereNom,0, NbHeuresMatiere).
 
-% Si le creneau est assignee a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
+% Si le creneau est assigne a la matiere MatiereNom, on ajoute 2h au res et on passe a la suivante.
 nb_hours_assigned_bis([[MatiereNom,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
     N1 is N+2,
 	nb_hours_assigned_bis(L,MatiereNom,N1, NbHeuresMatiere).
 
-% Si le creneau n'est pas assignee a la matiere, on passe a la suivante.
+% Si le creneau n'est pas assigne a la matiere, on passe a la suivante.
 nb_hours_assigned_bis([[_,_,_,_,_]|L],MatiereNom,N, NbHeuresMatiere):-
 	nb_hours_assigned_bis(L,MatiereNom,N, NbHeuresMatiere).
 
-% Si le planning est vide, on a la recherche voulue : on test le fait que N est bien inférieur aux heures voulues pour la matière
+% Si le planning est vide, on a la recherche voulue : on test le fait que N est bien inf�rieur aux heures voulues pour la mati�re
 nb_hours_assigned_bis([],_,N, NbHeuresMatiere):-
     NbHeuresMatiere is N.
 
+%%%%%%%%%%%%%%%%%%%
+%%%%    Jour   %%%%
+%%%%%%%%%%%%%%%%%%%
+
+validDay(NomJour, Planning, NomMatiere):-
+    validDayBis(NomJour, Planning, NomMatiere, 2).
+
+validDayBis(NomJour, [[NomMatiere,_,_,NomJour,_]|Planning], NomMatiere, Count):-
+    Res is Count-1,
+    validDayBis(NomJour,Planning,NomMatiere,Res).
+
+validDayBis(NomJour, [[_,_,_,_,_]|Planning], NomMatiere, Count):-
+    validDayBis(NomJour,Planning,NomMatiere,Count).
+
+validDayBis(_, [], _, Count):-
+    Count =< 0.
 
 %%%% Affichage au format csv %%%%
 
@@ -185,20 +203,21 @@ ajouter_matiere_edt([], Planning) :- write(Planning),nl,exportcsv(Planning).
 
 ajouter_matiere_edt([ID_Mat|AutresIDMatieres],Planning) :- 
 matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
+write('ajout '),write(NbHeuresMatiere),write(NomMatiere),nl,
 ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres],Planning,0,NbHeuresMatiere).
 
 
-ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, Nbr) :- 
-Nbr =< 0, % Si on a ajoute toutes les heures pour une matiere
+ajouter_matiere_edt_bis([_|AutresIDMatieres], Planning, Limite , Nbr) :-
+Nbr =< Limite,
 ajouter_matiere_edt(AutresIDMatieres,Planning). 
 
-ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, NbHrestant) :-
-    matiere(ID_Mat, NomMatiere, NbHeuresMatiere),
-    NbHrestant > 0, % On veut que NbHrestant soit superieur a 0 sinon on ajoute trop d'heures 
-    jour(ID_Jour, NomJour), % On parcours tous les jours
-    ID_Jour > Jourmin, % On prends le premier qui soit supérieur au jour minimum
+ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Limite, NbHrestant) :-
+    matiere(ID_Mat, NomMatiere, _),
+    write(NbHrestant),nl,
+    NbHrestant > 0, % On veut que Nbh ne d�passe pas NbHeuresMatiere OR prolog cherche d'autres valeurs pour Nbh ! WTF ?
+    jour(_, NomJour), % On parcours tous les jours
     creneau(ID_Creneau,_,_,TempsTotalCreneau), % On prends tous les creneaux
-    salle(ID_Salle, NomSalle), % On parcours toutes les salles
+    salle(_, NomSalle), % On parcours toutes les salles
     enseigne_par(ID_Prof,ID_Mat), % On parcours tous les profs qui enseignent cette matiere
     professeur(ID_Prof, NomProf,_), % On prend leur nom
 
@@ -208,8 +227,8 @@ ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Planning, Jourmin, NbHrestant
     \+member([_, NomSalle, ID_Creneau, NomJour, _], Planning), % On vérifie qu'une scéance sur la meme salle et le meme créneaux existe pas
     \+member([_, _, ID_Creneau, NomJour, NomProf], Planning), % On vérifie qu'un prof n'a pas cours le même jour pendant ce créneau
 
-    append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le résultat au Planning`
+    append(Planning, [[NomMatiere, NomSalle, ID_Creneau, NomJour, NomProf]], Result), % On ajoute le r�sultat au Planning`
     Nbr is NbHrestant-TempsTotalCreneau,
     Nbr >= 0,
-    ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Result, Jourmin, Nbr).
 
+    ajouter_matiere_edt_bis([ID_Mat|AutresIDMatieres], Result, Limite, Nbr).
